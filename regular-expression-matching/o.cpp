@@ -37,37 +37,38 @@ int main() {
 		if(p[i] == '.') 
 			a[Pcnt].c = -1;
 		else 
-			a[Pcnt].c = p[i] - 'a';
+			a[Pcnt].c = p[i];
 		Pcnt ++;
 	}
 
-	cout << Slen << ' ' << Pcnt << endl;
+	f[0][0] = true;
+	for (int i = 1; i <= Pcnt; i ++) {
+		if (!a[i - 1].flag) break;
+		f[0][i] = true;
+	}
 
-	if(a[0].c == -1 || a[0].c == s[0] - 'a') {
+
+	for (int j = 1; j <= Pcnt; j ++) 
+	for (int i = 1; i <= Slen; i ++) {
 		
-		f[0][0] = true;
-		if(a[0].flag) {
-			for (int i = 1; i < Slen; i ++)
-				if(a[0].c == -1 || a[0].c == s[i] - 'a')
-					f[i][0] = true;
+		if(f[i][j]) continue;
+		
+		if(a[j - 1].c == -1 || a[j - 1].c == s[i - 1]) {
+			
+			f[i][j] = (f[i - 1][j - 1] || (f[i - 1][j] && a[j - 1].flag));
+			
+			if(f[i][j]) {
+				
+				for(int k = j + 1; k <= Pcnt; k ++) {
+					if(!a[k - 1].flag) break;
+					f[i][k] = true;
+				}
+			}	
 		}
 	}
+	
 
-	for (int j = 1; j <= Pcnt; j ++) {
-		for (int i = 1; i < Slen; i ++) {
-			if(f[i][j]) continue;
-			if(a[j].c == -1 || a[j].c == s[i]) {
-				
-				// if(f[i - 1][j])
-				// for (int k = j - 1; k >= 0; k --)
-					
-				f[i][j] = (f[i - 1][j - 1] || (f[i - 1][j] && a[j].flag));
-				
-			}
-		}
-	}
-
-	cout << (int)f[Slen - 1][Pcnt - 1] << endl;
+	cout << f[Slen][Pcnt] << endl;
 
 	return 0;
 }
